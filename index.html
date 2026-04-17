@@ -8,17 +8,42 @@
     </head>
     <body>
         <header>
-            <h1>FOGGYNO</h1>
-            <p>TO-DO-LIST</p>
+            <div class="header-date">
+                <p>날짜</p>
+                <p>2025.04.17</p>
+            </div>
+            <div class="header-logo">
+                <span>☁️ foggyno</span>
+            </div>
+            <div class="header-setting">
+                <span>✳️ 설정 ✳️</span>
+            </div>
         </header>
     <main>
-        <div class="input-area">
-            <input type="text" id="todo-input" placeholder="할 일을 입력하세요">
-            <button id="add-btn">추가</button>
+        <div class="input-row">
+            <button id="cloud-btn">☁️</button>
+            <input type="text" id="todo-input" placeholder="지금 머릿속에 있는 걸 적어보세요">
+            <button id="add-btn">➕</button>
 
         </div>
+
+        
+        
         <ul class="todo-list">
-            <!--할일 목록-->
+            <li class="todo-card">
+                <div class="card-left">
+                    <span class="priority-badge">1</span>
+                </div>
+                <div class="card-middle">
+                    <span class="todo-title">중요 프로젝트 마감</span>  
+                    <span class="todo-date">기한: 2026.04.30</span>
+                </div>
+                <div class="card-right">
+                    <button class="checkbox">✅</button>
+                    <button class="clock-btn">🕒</button>
+                    <button class="hourglass-btn">⏳</button>
+                </div>
+            </li>
         </ul>
     </main>
       
