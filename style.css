@@ -1,0 +1,40 @@
+body {
+    background-color: #cce8f4 ;
+    font-family: sans-serif;
+}
+
+header {
+    text-align: center;
+    padding: 20px;
+}
+
+main {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px; 
+}
+
+.input-area {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#todo-input {
+    flex: 1; 
+    padding: 10px; 
+    border: 2px solid #a0d4ed;
+    border-radius: 8px;
+    font-size: 16px;
+
+}
+
+#add-btn {
+    padding: 10px 20px; 
+    background-color: #000080;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer; 
+    font-size: 16px;
+    
+}
