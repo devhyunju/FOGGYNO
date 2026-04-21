@@ -132,3 +132,14 @@ timerCancel.addEventListener('click', function(){
     timerStart.textContent = '▶ 시작'
     timerModal.style.display = 'none'
 })
+
+todoList.addEventListener('click', function(e){
+    if(e.target.classList.contains('hourglass-btn')){
+        const card = e.target.closest('.todo-card')
+        card.style.display = 'none'
+
+        setTimeout(function(){
+            card.style.display = 'block'
+        },5000)
+    }
+})
