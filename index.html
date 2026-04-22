@@ -10,10 +10,10 @@
         <header>
             <div class="header-date">
                 <p>날짜</p>
-                <p>2025.04.17</p>
+                <p id="today-date"></p>
             </div>
             <div class="header-logo">
-                <span>☁️ foggyno</span>
+                <img src="foggyno-logo.png" alt="foggyno 로고">
             </div>
             <div class="header-setting">
                 <span>✳️ 설정 ✳️</span>
@@ -31,20 +31,7 @@
         
         <ul class="todo-list">
             
-            <li class="todo-card">
-                <div class="card-left">
-                    <span class="priority-badge">1</span>
-                </div>
-                <div class="card-middle">
-                    <span class="todo-title">중요 프로젝트 마감</span>  
-                    <span class="todo-date">기한: 2026.04.30</span>
-                </div>
-                <div class="card-right">
-                    <button class="checkbox">✅</button>
-                    <button class="clock-btn">🕒</button>
-                    <button class="hourglass-btn">⏳</button>
-                </div>
-            </li>
+            
             
         </ul>
         <div class="completed-section">
@@ -94,7 +81,22 @@
                 <button id="timer-cancel">✕ 닫기</button>
             </div>
         </div>
+    </div>
 
+    <div class="modal-overlay" id="cloud-modal">
+        <div class="modal-box">
+             <h2>☁️ 딴생각 창고</h2>
+             <div class="modal-field">
+                <textarea id="cloud-input"></textarea>
+             </div>
+             <div class="modal-field">
+                <ul class="cloud-list"></ul>
+             </div>
+              <div class="modal-buttons">
+                <button id="cloud-cancel">취소</button>
+                <button id="cloud-save">저장</button>
+            </div>
+        </div>      
     </div>
        
     <script src="app.js"></script>

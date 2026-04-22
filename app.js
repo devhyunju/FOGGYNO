@@ -1,3 +1,11 @@
+const todayDate = document.querySelector('#today-date')
+
+const now = new Date()
+const year = now.getFullYear()
+const month = now.getMonth() + 1
+const day = now.getDate()
+todayDate.textContent = `${year}.${month}.${day}`
+
 const todoInput = document.querySelector('#todo-input')
 const addBtn = document.querySelector('#add-btn')
 const todoList =  document.querySelector('.todo-list')
@@ -14,11 +22,17 @@ const timerTitle = document.querySelector('#timer-title')
 const timerDisplay = document.querySelector('#timer-display')
 const timerStart = document.querySelector('#timer-start')
 const timerCancel = document.querySelector('#timer-cancel')
+const cloudBtn = document.querySelector('#cloud-btn')
+const cloudModal = document.querySelector('#cloud-modal')
+const cloudInput = document.querySelector('#cloud-input')
+const cloudSave = document.querySelector('#cloud-save')
+const cloudCancel = document.querySelector('#cloud-cancel')
+const cloudList = document.querySelector('.cloud-list')
 let cardCount = 0
 let timerSeconds = 1500
 let timerInterval = null
 let isRunning =false 
-
+let todos = []
 
 
 addBtn.addEventListener('click', function(){
@@ -58,10 +72,24 @@ modalSave.addEventListener('click', function(){
             <button class="checkbox">✅</button>
             <button class="clock-btn">🕒</button>
             <button class="hourglass-btn">⏳</button>
+            <button class="delete-btn">🗑️</button>
+        </div>
+        <div class="detail-content">
+            ${modalDetail.value}
         </div>
     `
 
     todoList.appendChild(li)
+
+    const todoData = {
+        text: text,
+        date: date, 
+        priority: priority, 
+        detail: modalDetail.value,
+        savedDate: new Date().toLocaleDateString('ko-KR')
+    }
+    todos.push(todoData)
+    saveTodos()
 
     modal.style.display = 'none'
     todoInput.value = ''
@@ -139,7 +167,100 @@ todoList.addEventListener('click', function(e){
         card.style.display = 'none'
 
         setTimeout(function(){
-            card.style.display = 'block'
+            card.style.display = 'flex'
         },5000)
     }
 })
+
+cloudBtn.addEventListener('click', function(){
+    const text = todoInput.value
+    cloudInput.value = text 
+    cloudModal.style.display = 'block'
+})
+
+cloudCancel.addEventListener('click', function(){
+    cloudModal.style.display = 'none'
+    cloudInput.value = ''
+})
+
+
+cloudSave.addEventListener('click', function(){
+    const text = cloudInput.value
+
+    if(text === '') return
+
+    const li = document.createElement('li')
+    li.innerHTML = `<span>${text}</span>`
+
+    cloudList.appendChild(li)
+    cloudInput.value = ''
+    
+    
+})
+
+todoList.addEventListener('click', function(e){
+    if(e.target.tagName === 'BUTTON') return
+
+    const card = e.target.closest('.todo-card')
+    if(card) {
+        card.classList.toggle('active')
+    }
+})
+
+function saveTodos(){
+    localStorage.setItem('todos', JSON.stringify(todos))
+}
+
+function loadTodos() {
+    const saved = localStorage.getItem('todos')
+    if(saved === null) return 
+
+    todos = JSON.parse(saved)
+
+    const today = new Date().toLocaleDateString('ko-KR')
+
+    todos.forEach(function(todo) {
+        const li = document.createElement('li')
+        li.className = 'todo-card'
+
+        const isRolledOver = todo.savedDate !== today
+
+        li.innerHTML = `
+            <div class="card-left">
+                <span class="priority-badge">${todo.priority}</span>
+            </div>
+            <div class="card-middle">
+                <span class="todo-title">
+                    ${isRolledOver ?'🔄':''}${todo.text}
+                </span>
+                <span class="todo-date">기한: ${todo.date}</span>
+            </div>
+            <div class="card-right">
+                <button class="checkbox">✅</button>
+                <button class="clock-btn">🕒</button>
+                <button class="hourglass-btn">⏳</button>
+                <button class="delete-btn">🗑️</button>
+            </div>
+            <div class="detail-content">
+                ${todo.detail}
+            </div>
+
+        `
+        todoList.appendChild(li)
+    })
+}
+
+loadTodos()
+
+todoList.addEventListener('click', function(e){
+        if(e.target.classList.contains('delete-btn')) {
+            const card = e.target.closest('.todo-card')
+            
+            card.classList.add('card-removing')
+            
+            setTimeout(function() {
+                card.remove()
+            }, 400)
+            
+        }
+    })
