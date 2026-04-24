@@ -1,11 +1,18 @@
 const sortSelect = document.querySelector('#sort-select')
 const todayDate = document.querySelector('#today-date')
+const prevDay = document.querySelector('#prev-day')
+const nextDay = document.querySelector('#next-day')
 
-const now = new Date()
-const year = now.getFullYear()
-const month = now.getMonth() + 1
-const day = now.getDate()
-todayDate.textContent = `${year}.${month}.${day}`
+let currentDate = new Date()
+
+function displayDate(){
+    const year = currentDate.getFullYear()
+    const month = currentDate.getMonth() + 1
+    const day = currentDate.getDate()
+    todayDate.textContent = `${year}.${month}.${day}`
+
+}
+
 
 const todoInput = document.querySelector('#todo-input')
 const addBtn = document.querySelector('#add-btn')
@@ -88,6 +95,7 @@ modalSave.addEventListener('click', function(){
         priority: priority, 
         detail: modalDetail.value,
         savedDate: new Date().toLocaleDateString('ko-KR'),
+        showDate: currentDate.toLocaleDateString('ko-KR'), 
         completed: false
 
     }
@@ -228,42 +236,9 @@ function loadTodos() {
 
     todos = JSON.parse(saved)
 
-    const today = new Date().toLocaleDateString('ko-KR')
+    renderTodos()
 
-    todos.forEach(function(todo) {
-        const li = document.createElement('li')
-        li.className = 'todo-card'
-
-        const isRolledOver = todo.savedDate !== today
-
-        li.innerHTML = `
-            <div class="card-left">
-                <span class="priority-badge">${todo.priority}</span>
-            </div>
-            <div class="card-middle">
-                <span class="todo-title">
-                    ${isRolledOver ?'🔄':''}${todo.text}
-                </span>
-                <span class="todo-date">기한: ${todo.date}</span>
-            </div>
-            <div class="card-right">
-                <button class="checkbox">✅</button>
-                <button class="clock-btn">🕒</button>
-                <button class="hourglass-btn">⏳</button>
-                <button class="delete-btn">🗑️</button>
-            </div>
-            <div class="detail-content">
-                ${todo.detail}
-            </div>
-
-        `
-        if(todo.completed) {
-            li.classList.add('completed')
-            completedList.appendChild(li)
-        } else {
-            todoList.appendChild(li)
-        }
-    })
+    
 }
 
 loadTodos()
@@ -347,3 +322,62 @@ sortSelect.addEventListener('change', function(){
         todoList.appendChild(li)
     })
 })
+
+prevDay.addEventListener('click', function(){
+    currentDate.setDate(currentDate.getDate() - 1)
+    displayDate()
+    renderTodos()
+})
+
+nextDay.addEventListener('click', function(){
+    currentDate.setDate(currentDate.getDate() + 1)
+    displayDate()
+    renderTodos()
+})
+
+displayDate()
+
+function renderTodos() {
+    const todayOnly = new Date()
+    todayOnly.setHours(0,0,0,0)
+    const currentOnly = new Date(currentDate)
+    currentOnly.setHours(0,0,0,0)
+    const showDateStr = currentDate.toLocaleDateString('ko-KR')
+    const isFuture = currentOnly > todayOnly
+
+    todoList.innerHTML = ''
+
+    todos.forEach(function(todo){
+        if(todo.completed) return
+
+        if(isFuture) {
+        if(todo.showDate !== showDateStr) return
+        }else {
+            if(todo.showDate !== showDateStr) return
+        }
+        const isRolledOver = todo.savedDate !== showDateStr
+
+        const li = document.createElement('li')
+        li.className = 'todo-card'
+        li.innerHTML = `
+        <div class="card-left">
+                <span class="priority-badge">${todo.priority}</span>
+            </div>
+            <div class="card-middle">
+                <span class="todo-title">
+                    ${isRolledOver ? '🔄 ' : ''}${todo.text}
+                </span>
+                <span class="todo-date">기한: ${todo.date}</span>
+            </div>
+            <div class="card-right">
+                <button class="checkbox">✅</button>
+                <button class="clock-btn">🕒</button>
+                <button class="hourglass-btn">⏳</button>
+                <button class="delete-btn">🗑️</button>
+            </div>
+            <div class="detail-content">${todo.detail}</div>
+        `
+        todoList.appendChild(li)
+        
+    })
+}

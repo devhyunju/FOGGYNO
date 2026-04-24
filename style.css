@@ -356,3 +356,25 @@ main {
     cursor: pointer;
     color: #333;
 }
+
+.date-nav {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#prev-day, #next-day {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer; 
+    color: #5b9bd5;
+    font-weight: bold;
+}
+
+#today-date {
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+    cursor: pointer;
+}
