@@ -342,3 +342,17 @@ main {
         width: 85%;
     }
 }
+
+.sort-row {
+    margin-bottom: 12px;
+}
+
+#sort-select {
+    padding: 6px 12px;
+    border: 2px solid #a0d4ed;
+    border-radius: 8px;
+    background: white;
+    font-size: 14px; 
+    cursor: pointer;
+    color: #333;
+}

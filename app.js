@@ -1,3 +1,4 @@
+const sortSelect = document.querySelector('#sort-select')
 const todayDate = document.querySelector('#today-date')
 
 const now = new Date()
@@ -86,7 +87,9 @@ modalSave.addEventListener('click', function(){
         date: date, 
         priority: priority, 
         detail: modalDetail.value,
-        savedDate: new Date().toLocaleDateString('ko-KR')
+        savedDate: new Date().toLocaleDateString('ko-KR'),
+        completed: false
+
     }
     todos.push(todoData)
     saveTodos()
@@ -110,6 +113,14 @@ modalSave.addEventListener('click', function(){
                 card.classList.remove('card-removing')
                 card.classList.add('completed')
                 completedList.appendChild(card)
+                const title = card.querySelector('.todo-title').textContent
+                todos = todos.map(function(todo){
+                    if(todo.text === title.replace('🔄', '').trim()){
+                        todo.completed = true
+                    }
+                    return todo
+                })
+                saveTodos()
             }, 400)
             
         }
@@ -246,7 +257,12 @@ function loadTodos() {
             </div>
 
         `
-        todoList.appendChild(li)
+        if(todo.completed) {
+            li.classList.add('completed')
+            completedList.appendChild(li)
+        } else {
+            todoList.appendChild(li)
+        }
     })
 }
 
@@ -259,8 +275,75 @@ todoList.addEventListener('click', function(e){
             card.classList.add('card-removing')
             
             setTimeout(function() {
+                const title = card.querySelector('.todo-title').textContent
+
+                todos = todos.filter(function(todo){
+                    return title.replace('🔄', '').trim() !== todo.text
+                })
+                saveTodos()
                 card.remove()
             }, 400)
             
         }
     })
+    
+
+completedList.addEventListener('click', function(e){
+    if(e.target.classList.contains('checkbox')){
+       const card = e.target.closest('.todo-card')
+
+       card.classList.remove('completed')
+       todoList.appendChild(card)
+       const title = card.querySelector('.todo-title').textContent
+    todos = todos.map(function(todo){
+        if(todo.text === title.replace('🔄', '').trim()){
+            todo.completed = false
+        }
+        return todo
+        
+    })
+    saveTodos()
+    }
+    
+})
+
+sortSelect.addEventListener('change', function(){
+    const value = sortSelect.value
+
+    if(value === 'priority') {
+        todos.sort(function(a,b) {
+            return a.priority - b.priority
+        })
+    }
+
+    if(value === 'date'){
+        todos.sort(function(a, b){
+            return new Date(a.date) - new Date(b.date)
+        })
+    }
+    //화면 다시 그리기 
+    todoList.innerHTML = ''
+    todos.forEach(function(todo){
+        if(todo.completed) return
+        const li = document.createElement('li')
+        li.className = 'todo-card'
+        li.innerHTML = `
+            <div class="card-left">
+                <span class="priority-badge">${todo.priority}</span>
+            </div>
+            <div class="card-middle">
+                <span class="todo-title">${todo.text}</span>
+                <span class="todo-date">기한: ${todo.date}</span>
+            </div>
+            <div class="card-right">
+                <button class="checkbox">✅</button>
+                <button class="clock-btn">🕒</button>
+                <button class="hourglass-btn">⏳</button>
+                <button class="delete-btn">🗑️</button>
+            </div>
+            <div class="detail-content">${todo.detail}</div>
+        `
+
+        todoList.appendChild(li)
+    })
+})
